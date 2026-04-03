@@ -19,6 +19,7 @@ import MapPage from './pages/user/MapPage';
 import EmergencyPage from './pages/user/EmergencyPage';
 import ProfilePage from './pages/user/ProfilePage';
 import RequestsPage from './pages/user/RequestsPage';
+import AnalysisResultPage from './pages/user/AnalysisResultPage';
 
 // Provider pages
 import ProviderDashboard from './pages/provider/ProviderDashboard';
@@ -54,6 +55,7 @@ function App() {
               {/* User routes */}
               <Route path="home" element={<HomePage />} />
               <Route path="scan" element={<ScanPage />} />
+              <Route path="analysis-result" element={<AnalysisResultPage />} />
               <Route path="result/:requestId" element={<ResultPage />} />
               <Route path="map/:requestId" element={<MapPage />} />
               <Route path="emergency" element={<EmergencyPage />} />

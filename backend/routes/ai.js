@@ -38,6 +38,84 @@ const upload = multer({
 // All routes are protected
 router.use(protect);
 
+// @desc    Test AI endpoint
+// @route   POST /api/ai/test
+// @access  Private
+router.post('/test', async (req, res) => {
+  try {
+    console.log('🧪 AI test endpoint hit');
+    res.status(200).json({
+      success: true,
+      message: 'AI test endpoint working',
+      data: {
+        test: 'AI routes are accessible',
+        timestamp: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    console.error('AI test error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'AI test failed'
+    });
+  }
+});
+
+// @desc    Combined AI analysis (image + audio)
+// @route   POST /api/ai/analyze
+// @access  Private
+router.post('/analyze', upload.fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'audio', maxCount: 1 }
+]), async (req, res) => {
+  try {
+    console.log('🔍 Combined AI analysis request');
+    console.log('📸 Files:', Object.keys(req.files));
+    
+    const results = {};
+    
+    // Analyze image if provided
+    if (req.files.image && req.files.image[0]) {
+      console.log('📸 Analyzing image:', req.files.image[0].filename);
+      results.image = analyzeImageDummy(req.files.image[0].filename);
+    }
+    
+    // Analyze audio if provided
+    if (req.files.audio && req.files.audio[0]) {
+      console.log('🎵 Analyzing audio:', req.files.audio[0].filename);
+      results.audio = analyzeAudioDummy(req.files.audio[0].filename);
+    }
+    
+    // If no files provided, return error
+    if (Object.keys(results).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'At least one file (image or audio) is required'
+      });
+    }
+    
+    console.log('✅ Combined analysis complete:', results);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Analysis completed successfully',
+      data: {
+        analysis: results,
+        files: {
+          image: req.files.image ? `/uploads/${req.files.image[0].filename}` : null,
+          audio: req.files.audio ? `/uploads/${req.files.audio[0].filename}` : null
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Combined analysis error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error performing analysis'
+    });
+  }
+});
+
 // @desc    Analyze image for vehicle issues
 // @route   POST /api/ai/analyze-image
 // @access  Private
