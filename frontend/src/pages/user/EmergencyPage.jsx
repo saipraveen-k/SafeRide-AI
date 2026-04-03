@@ -156,7 +156,7 @@ const EmergencyPage = () => {
               Send Emergency SOS
             </h3>
             
-            {!sosSent ? (
+{!sosSent && (
               <div className="text-center">
                 {isSending ? (
                   <div className="space-y-4">
